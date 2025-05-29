@@ -1,0 +1,7 @@
+/* css styles */
+
+.table-scroll {
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}

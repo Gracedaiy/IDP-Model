@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>About – IDP Model</title>
+<title>Indentity Provider (IDP) Model – IDP Model</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Page</span></a>
   </li>  
 </ul>
@@ -103,15 +103,37 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#objective-1" id="toc-objective-1" class="nav-link active" data-scroll-target="#objective-1">Objective 1</a>
+  <ul class="collapse">
+  <li><a href="#primary-use-cases" id="toc-primary-use-cases" class="nav-link" data-scroll-target="#primary-use-cases">Primary use cases</a></li>
+  <li><a href="#immediate-answer-from-querying" id="toc-immediate-answer-from-querying" class="nav-link" data-scroll-target="#immediate-answer-from-querying">Immediate answer from querying</a></li>
+  <li><a href="#define-the-goals" id="toc-define-the-goals" class="nav-link" data-scroll-target="#define-the-goals">Define the Goals</a></li>
+  <li><a href="#mapping-table" id="toc-mapping-table" class="nav-link" data-scroll-target="#mapping-table">Mapping Table</a></li>
+  </ul></li>
+  <li><a href="#objective-2" id="toc-objective-2" class="nav-link" data-scroll-target="#objective-2">Objective 2</a>
+  <ul class="collapse">
+  <li><a href="#primary-use-cases-1" id="toc-primary-use-cases-1" class="nav-link" data-scroll-target="#primary-use-cases-1">Primary use cases</a></li>
+  <li><a href="#mapping-table-1" id="toc-mapping-table-1" class="nav-link" data-scroll-target="#mapping-table-1">Mapping table</a></li>
+  </ul></li>
+  <li><a href="#summarize" id="toc-summarize" class="nav-link" data-scroll-target="#summarize">Summarize</a>
+  <ul class="collapse">
+  <li><a href="#procedure" id="toc-procedure" class="nav-link" data-scroll-target="#procedure">Procedure</a></li>
+  <li><a href="#difficulties" id="toc-difficulties" class="nav-link" data-scroll-target="#difficulties">Difficulties</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About</h1>
+<h1 class="title">Indentity Provider (IDP) Model</h1>
 </div>
 
 
@@ -128,9 +150,282 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>About this site</p>
+<section id="objective-1" class="level1">
+<h1>Objective 1</h1>
+<p>Enhance the <code>user</code> object to include key attributes that are commonly useful in security investigation and access reviews. These fields should include details on the user’s role, the user’s type (regular, admin, etc.), and details about their MFA enrollment status.</p>
+<section id="primary-use-cases" class="level2">
+<h2 class="anchored" data-anchor-id="primary-use-cases">Primary use cases</h2>
+<ol type="1">
+<li><p>Identity and Access Management security products that give security teams insights into gaps in their identity security posture (such as too many accounts in an environment with admin privileges, unused accounts, etc.)</p></li>
+<li><p>GRC products that give compliance teams insights on how the data from their identity security products maps to controls within various compliance frameworks (SOC2, ISO27001, etc.)</p></li>
+</ol>
+</section>
+<section id="immediate-answer-from-querying" class="level2">
+<h2 class="anchored" data-anchor-id="immediate-answer-from-querying">Immediate answer from querying</h2>
+<ol type="1">
+<li><p>How many admin users do I have in my environment?</p></li>
+<li><p>Are there unused accounts/grants in my environment?</p></li>
+<li><p>Which policies are active in my environment?</p></li>
+<li><p>Which users do these policies apply to?</p></li>
+</ol>
+</section>
+<section id="define-the-goals" class="level2">
+<h2 class="anchored" data-anchor-id="define-the-goals">Define the Goals</h2>
+<ol type="1">
+<li><p>Identify privilege risk</p></li>
+<li><p>Expose unused Identities</p></li>
+<li><p>Map users to security policies</p></li>
+<li><p>Support control evidence for compliance (GRC)</p></li>
+</ol>
+</section>
+<section id="mapping-table" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-table">Mapping Table</h2>
+<!-- | `userId` | `id` | `/api/v1/users` | `id` | `/users` | -->
+<!-- | `userPrincipalName` | `profile.login` | `/api/v1/users` | `userPrincipalName` | `/users` | -->
+<!-- | `email` | `profile.email` | `/api/v1/users` | `mail` or `userPrincipalName` | `/users` | -->
+<!-- | `displayName` | `profile.displayName` | `/api/v1/users` | `displayName` | `/users` | -->
+<!-- | `userType` | `profile.userType` or inferred via roles | `/api/v1/users` | `userType` (`Member`, `Guest`, etc.) | `/users` | -->
+<!-- | `mfaEnrollment.enrolled` | `factors[]` exists | `/api/v1/users/{id}/factors` | `authentication.methods[]` exists | `/users/{id}/authentication/methods` | -->
+<!-- | `mfaBypassConfigured` | Inferred from policy/network zones | `/api/v1/policies` | Inferred from Conditional Access exceptions | `/identity/conditionalAccess/policies` | -->
+<!-- | `passwordLastChangedDate` | From logs (password update event) | `/api/v1/logs` | Not directly exposed, inferred via sign-ins | `/auditLogs/signIns` or audit logs | -->
+<!-- | `userRiskState` | reason | `/api/v1/users/{userId}/risk`| `riskState` (e.g., `atRisk`, `confirmedCompromised`) | `/identityProtection/riskyUsers` | -->
+<div class="table-scroll">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Logical Field</strong></th>
+<th><strong>Okta Field / Source</strong></th>
+<th><strong>Okta API Endpoint</strong></th>
+<th><strong>Entra ID Field / Source</strong></th>
+<th><strong>Microsoft Graph Endpoint</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>accountCreatedDate</code></td>
+<td><code>created</code></td>
+<td><code>/api/v1/users</code></td>
+<td><code>createdDateTime</code></td>
+<td><code>/users</code></td>
+</tr>
+<tr class="even">
+<td><code>accountEnabled</code></td>
+<td><code>status == "ACTIVE"</code></td>
+<td><code>/api/v1/users</code></td>
+<td><code>accountEnabled</code></td>
+<td><code>/users</code></td>
+</tr>
+<tr class="odd">
+<td><code>roles</code></td>
+<td><code>/users/{id}/roles</code></td>
+<td><code>/api/v1/users/{id}/roles</code></td>
+<td><code>/directoryRoles/members</code></td>
+<td><code>/directoryRoles/{id}/members</code></td>
+</tr>
+<tr class="even">
+<td><code>groups</code></td>
+<td><code>/users/{id}/groups</code></td>
+<td><code>/api/v1/users/{id}/groups</code></td>
+<td><code>/users/{id}/memberOf</code></td>
+<td><code>/users/{id}/memberOf</code></td>
+</tr>
+<tr class="odd">
+<td><code>assignedApplications</code></td>
+<td><code>/users/{id}/appLinks</code></td>
+<td><code>/api/v1/users/{id}/appLinks</code></td>
+<td><code>appRoleAssignments</code></td>
+<td><code>/users/{id}/appRoleAssignments</code></td>
+</tr>
+<tr class="even">
+<td><code>mfaEnrollment.methods</code></td>
+<td><code>factorType</code>, <code>provider</code></td>
+<td><code>/api/v1/users/{id}/factors</code></td>
+<td><code>@odata.type</code> in methods</td>
+<td><code>/users/{id}/authentication/methods</code></td>
+</tr>
+<tr class="odd">
+<td><code>lastSuccessfulLogin</code></td>
+<td><code>lastLogin</code></td>
+<td><code>/api/v1/users</code></td>
+<td><code>signIns.success == true</code></td>
+<td><code>/auditLogs/signIns</code></td>
+</tr>
+<tr class="even">
+<td><code>lastFailedLogin</code></td>
+<td>From logs (<code>user.authentication.failed</code>)</td>
+<td><code>/api/v1/logs</code></td>
+<td><code>signIns.success == false</code></td>
+<td><code>/auditLogs/signIns</code></td>
+</tr>
+<tr class="odd">
+<td><code>signInLocations</code></td>
+<td><code>client.geographicalContext</code> in logs</td>
+<td><code>/api/v1/logs</code></td>
+<td><code>location</code> in sign-ins</td>
+<td><code>/auditLogs/signIns</code></td>
+</tr>
+<tr class="even">
+<td><code>signInDevices</code></td>
+<td><code>userAgent</code> or <code>device.name</code> in logs</td>
+<td><code>/api/v1/logs</code></td>
+<td><code>deviceDetail</code> in sign-ins</td>
+<td><code>/auditLogs/signIns</code></td>
+</tr>
+<tr class="odd">
+<td><code>riskLevel</code></td>
+<td><code>riskLevel</code></td>
+<td><code>/api/v1/users/{userId}/risk</code></td>
+<td><code>riskLevel</code> in Identity Protection</td>
+<td><code>/identityProtection/riskyUsers</code></td>
+</tr>
+<tr class="even">
+<td><code>policiesApplied</code></td>
+<td><code>name</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>displayName</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="odd">
+<td><code>policyGroup</code></td>
+<td><code>conditions.people.group.include</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>guestUserRoleId</code></td>
+<td><code>/policies/authorizationPolicy</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="objective-2" class="level1">
+<h1>Objective 2</h1>
+<p>Design a new <code>policy</code> object that contains relevant details on organizational policies that apply to users. Use cases for querying this data could include identifying whether or not policies are in place to enforce strong passwords, prevent users from logging in from unauthorized locations, etc.</p>
+<section id="primary-use-cases-1" class="level2">
+<h2 class="anchored" data-anchor-id="primary-use-cases-1">Primary use cases</h2>
+<ol type="1">
+<li><p>Security posture visibility: Understand if foundation identity policies, e.g.&nbsp;MFA, password strength are in place</p></li>
+<li><p>Governance and compliance mapping: Demonstrate policy enforcement against frameworks like ISO27001, SOC 2</p></li>
+<li><p>Investigation support: Determine what policies applied to a user at the time of an incident</p></li>
+</ol>
+</section>
+<section id="mapping-table-1" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-table-1">Mapping table</h2>
+<div class="table-scroll">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 23%">
+<col style="width: 18%">
+<col style="width: 25%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Logical Field</strong></th>
+<th><strong>Okta Field / Source</strong></th>
+<th><strong>Okta API Endpoint</strong></th>
+<th><strong>Entra ID Field / Source</strong></th>
+<th><strong>Microsoft Graph Endpoint</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>policyId</code></td>
+<td><code>id</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>id</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="even">
+<td><code>policyType</code></td>
+<td><code>type</code> (e.g., <code>PASSWORD</code>, <code>MFA_ENROLL</code>)</td>
+<td><code>/api/v1/policies</code></td>
+<td>Derived from <code>conditions</code> and <code>grantControls</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td><code>name</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>displayName</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="even">
+<td><code>enforced</code></td>
+<td><code>status == ACTIVE</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>state == enabled</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="odd">
+<td><code>targetGroups</code></td>
+<td><code>conditions.people.groups</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>conditions.users.includeGroups</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="even">
+<td><code>conditions</code></td>
+<td><code>conditions.&lt;subfields&gt;</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>conditions</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="odd">
+<td><code>mfaRequired</code></td>
+<td><code>type == MFA_ENROLL</code> or <code>rule.actions.mfa</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>grantControls.builtInControls</code> contains <code>"mfa"</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="even">
+<td><code>locationRestrictions</code></td>
+<td>Via <code>networkZones</code> and policy conditions</td>
+<td><code>/api/v1/policies</code>, <code>/api/v1/zones</code></td>
+<td><code>conditions.locations</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="odd">
+<td><code>deviceComplianceRequired</code></td>
+<td><code>rule.conditions.client.condition.deviceTrust</code></td>
+<td><code>/api/v1/policies</code></td>
+<td><code>grantControls.requireCompliantDevice</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+<tr class="even">
+<td><code>bypassConditions</code></td>
+<td><code>conditions.people.users.exclude</code>, etc.</td>
+<td><code>/api/v1/policies</code></td>
+<td><code>conditions.users.excludeUsers</code>, <code>excludeGroups</code></td>
+<td><code>/identity/conditionalAccess/policies</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="summarize" class="level1">
+<h1>Summarize</h1>
+<section id="procedure" class="level2">
+<h2 class="anchored" data-anchor-id="procedure">Procedure</h2>
+<p>To address both questions effectively, the critical first step is to clearly define the objectives—specifically, what functionality the object is intended to support. Once the goals are established, I begin by brainstorming a list of potential data fields that would align with and serve those objectives.</p>
+<p>With the candidate fields identified by skimming through the API documentation from both Okta and Microsoft Entra ID, I then focus on mapping these requirements to each platform. This process involves analyzing how each system structures relevant data related to identity, access, and policies, and identifying any semantic or structural discrepancies that may affect normalization efforts.</p>
+<p>The final and most crucial phase is to evaluate whether these fields can be normalized—i.e., abstracted or aligned into a consistent schema that can work across both systems. This step is essential for building a unified integration layer or abstraction model that supports interoperability between identity providers, especially in scenarios where organizations rely on multi-cloud or hybrid identity environments.</p>
+</section>
+<section id="difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="difficulties">Difficulties</h2>
+<p>One of the main challenges in designing the user and policy objects was reconciling the differences in schema, terminology, and feature coverage between Okta and Microsoft Entra ID. Each platform structures identity and policy data differently—for example, Okta separates policy types while Entra ID uses nested conditional access logic—making direct field mappings nontrivial. Additionally, inconsistencies in API exposure (like missing password policy settings in Entra or limited risk signal visibility in Okta) required assumptions or inferred logic to maintain parity. These differences complicated both the data model design and the alignment of fields to real-world security use cases.</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
