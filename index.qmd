@@ -1,0 +1,109 @@
+---
+title: "Indentity Provider (IDP) Model"
+---
+
+# Objective 1
+
+Enhance the `user` object to include key attributes that are commonly useful in security investigation and access reviews. These fields should include details on the user's role, the user's type (regular, admin, etc.), and details about their MFA enrollment status.
+
+## Primary use cases
+
+1.  Identity and Access Management security products that give security teams insights into gaps in their identity security posture (such as too many accounts in an environment with admin privileges, unused accounts, etc.)
+
+2.  GRC products that give compliance teams insights on how the data from their identity security products maps to controls within various compliance frameworks (SOC2, ISO27001, etc.)
+
+## Immediate answer from querying
+
+1.  How many admin users do I have in my environment?
+
+2.  Are there unused accounts/grants in my environment?
+
+3.  Which policies are active in my environment?
+
+4.  Which users do these policies apply to?
+
+## Define the Goals
+
+1.  Identify privilege risk
+
+2.  Expose unused Identities
+
+3.  Map users to security policies
+
+4.  Support control evidence for compliance (GRC)
+
+## Mapping Table
+
+<!-- | `userId` | `id` | `/api/v1/users` | `id` | `/users` | -->
+
+<!-- | `userPrincipalName` | `profile.login` | `/api/v1/users` | `userPrincipalName` | `/users` | -->
+
+<!-- | `email` | `profile.email` | `/api/v1/users` | `mail` or `userPrincipalName` | `/users` | -->
+
+<!-- | `displayName` | `profile.displayName` | `/api/v1/users` | `displayName` | `/users` | -->
+
+<!-- | `userType` | `profile.userType` or inferred via roles | `/api/v1/users` | `userType` (`Member`, `Guest`, etc.) | `/users` | -->
+
+<!-- | `mfaEnrollment.enrolled` | `factors[]` exists | `/api/v1/users/{id}/factors` | `authentication.methods[]` exists | `/users/{id}/authentication/methods` | -->
+
+<!-- | `mfaBypassConfigured` | Inferred from policy/network zones | `/api/v1/policies` | Inferred from Conditional Access exceptions | `/identity/conditionalAccess/policies` | -->
+
+<!-- | `passwordLastChangedDate` | From logs (password update event) | `/api/v1/logs` | Not directly exposed, inferred via sign-ins | `/auditLogs/signIns` or audit logs | -->
+
+<!-- | `userRiskState` | reason | `/api/v1/users/{userId}/risk`| `riskState` (e.g., `atRisk`, `confirmedCompromised`) | `/identityProtection/riskyUsers` | -->
+
+::: {.table-scroll}
+| **Logical Field** | **Okta Field / Source** | **Okta API Endpoint** | **Entra ID Field / Source** | **Microsoft Graph Endpoint** |
+|---------------|---------------|---------------|---------------|---------------|
+| `accountCreatedDate` | `created` | `/api/v1/users` | `createdDateTime` | `/users` |
+| `accountEnabled` | `status == "ACTIVE"` | `/api/v1/users` | `accountEnabled` | `/users` |
+| `roles` | `/users/{id}/roles` | `/api/v1/users/{id}/roles` | `/directoryRoles/members` | `/directoryRoles/{id}/members` |
+| `groups` | `/users/{id}/groups` | `/api/v1/users/{id}/groups` | `/users/{id}/memberOf` | `/users/{id}/memberOf` |
+| `assignedApplications` | `/users/{id}/appLinks` | `/api/v1/users/{id}/appLinks` | `appRoleAssignments` | `/users/{id}/appRoleAssignments` |
+| `mfaEnrollment.methods` | `factorType`, `provider` | `/api/v1/users/{id}/factors` | `@odata.type` in methods | `/users/{id}/authentication/methods` |
+| `lastSuccessfulLogin` | `lastLogin` | `/api/v1/users` | `signIns.success == true` | `/auditLogs/signIns` |
+| `lastFailedLogin` | From logs (`user.authentication.failed`) | `/api/v1/logs` | `signIns.success == false` | `/auditLogs/signIns` |
+| `signInLocations` | `client.geographicalContext` in logs | `/api/v1/logs` | `location` in sign-ins | `/auditLogs/signIns` |
+| `signInDevices` | `userAgent` or `device.name` in logs | `/api/v1/logs` | `deviceDetail` in sign-ins | `/auditLogs/signIns` |
+| `riskLevel` | `riskLevel` | `/api/v1/users/{userId}/risk` | `riskLevel` in Identity Protection | `/identityProtection/riskyUsers` |
+| `policiesApplied` |`name` | `/api/v1/policies` | `displayName` | `/identity/conditionalAccess/policies` |
+| `policyGroup` | `conditions.people.group.include` |`/api/v1/policies` |`guestUserRoleId`| `/policies/authorizationPolicy` |
+:::
+
+# Objective 2
+Design a new `policy` object that contains relevant details on organizational policies that apply to users. Use cases for querying this data could include identifying whether or not policies are in place to enforce strong passwords, prevent users from logging in from unauthorized locations, etc.
+
+## Primary use cases
+
+1. Security posture visibility: Understand if foundation identity policies, e.g. MFA, password strength are in place
+
+2. Governance and compliance mapping: Demonstrate policy enforcement against frameworks like ISO27001, SOC 2
+
+3. Investigation support: Determine what policies applied to a user at the time of an incident
+
+## Mapping table
+::: {.table-scroll}
+| **Logical Field**             | **Okta Field / Source**                                  | **Okta API Endpoint**                        | **Entra ID Field / Source**                                      | **Microsoft Graph Endpoint**                        |
+|------------------------------|-----------------------------------------------------------|----------------------------------------------|------------------------------------------------------------------|-----------------------------------------------------|
+| `policyId`                   | `id`                                                     | `/api/v1/policies`                           | `id`                                                             | `/identity/conditionalAccess/policies`              |
+| `policyType`                 | `type` (e.g., `PASSWORD`, `MFA_ENROLL`)                  | `/api/v1/policies`                           | Derived from `conditions` and `grantControls`                    | `/identity/conditionalAccess/policies`              |
+| `name`                       | `name`                                                   | `/api/v1/policies`                           | `displayName`                                                    | `/identity/conditionalAccess/policies`              |
+| `enforced`                   | `status == ACTIVE`                                       | `/api/v1/policies`                           | `state == enabled`                                               | `/identity/conditionalAccess/policies`              |
+| `targetGroups`              | `conditions.people.groups`                               | `/api/v1/policies`                           | `conditions.users.includeGroups`                                 | `/identity/conditionalAccess/policies`              |
+| `conditions`                 | `conditions.<subfields>`                                 | `/api/v1/policies`                           | `conditions`                                                     | `/identity/conditionalAccess/policies`              |
+| `mfaRequired`               | `type == MFA_ENROLL` or `rule.actions.mfa`               | `/api/v1/policies`                           | `grantControls.builtInControls` contains `"mfa"`                 | `/identity/conditionalAccess/policies`              |
+| `locationRestrictions`       | Via `networkZones` and policy conditions                 | `/api/v1/policies`, `/api/v1/zones`          | `conditions.locations`                                           | `/identity/conditionalAccess/policies`              |
+| `deviceComplianceRequired`   | `rule.conditions.client.condition.deviceTrust`           | `/api/v1/policies`                           | `grantControls.requireCompliantDevice`                           | `/identity/conditionalAccess/policies`              |
+| `bypassConditions`           | `conditions.people.users.exclude`, etc.                 | `/api/v1/policies`                           | `conditions.users.excludeUsers`, `excludeGroups`                 | `/identity/conditionalAccess/policies`              |
+:::
+
+# Summarize
+## Procedure
+To address both questions effectively, the critical first step is to clearly define the objectives—specifically, what functionality the object is intended to support. Once the goals are established, I begin by brainstorming a list of potential data fields that would align with and serve those objectives.
+
+With the candidate fields identified by skimming through the API documentation from both Okta and Microsoft Entra ID, I then focus on mapping these requirements to each platform. This process involves analyzing how each system structures relevant data related to identity, access, and policies, and identifying any semantic or structural discrepancies that may affect normalization efforts.
+
+The final and most crucial phase is to evaluate whether these fields can be normalized—i.e., abstracted or aligned into a consistent schema that can work across both systems. This step is essential for building a unified integration layer or abstraction model that supports interoperability between identity providers, especially in scenarios where organizations rely on multi-cloud or hybrid identity environments.
+
+## Difficulties
+One of the main challenges in designing the user and policy objects was reconciling the differences in schema, terminology, and feature coverage between Okta and Microsoft Entra ID. Each platform structures identity and policy data differently—for example, Okta separates policy types while Entra ID uses nested conditional access logic—making direct field mappings nontrivial. Additionally, inconsistencies in API exposure (like missing password policy settings in Entra or limited risk signal visibility in Okta) required assumptions or inferred logic to maintain parity. These differences complicated both the data model design and the alignment of fields to real-world security use cases.

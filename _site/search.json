@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "Enhance the user object to include key attributes that are commonly useful in security investigation and access reviews. These fields should include details on the user’s role, the user’s type (regular, admin, etc.), and details about their MFA enrollment status.\n\n\n\nIdentity and Access Management security products that give security teams insights into gaps in their identity security posture (such as too many accounts in an environment with admin privileges, unused accounts, etc.)\nGRC products that give compliance teams insights on how the data from their identity security products maps to controls within various compliance frameworks (SOC2, ISO27001, etc.)\n\n\n\n\n\nHow many admin users do I have in my environment?\nAre there unused accounts/grants in my environment?\nWhich policies are active in my environment?\nWhich users do these policies apply to?\n\n\n\n\n\nIdentify privilege risk\nExpose unused Identities\nMap users to security policies\nSupport control evidence for compliance (GRC)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLogical Field\nOkta Field / Source\nOkta API Endpoint\nEntra ID Field / Source\nMicrosoft Graph Endpoint\n\n\n\n\naccountCreatedDate\ncreated\n/api/v1/users\ncreatedDateTime\n/users\n\n\naccountEnabled\nstatus == \"ACTIVE\"\n/api/v1/users\naccountEnabled\n/users\n\n\nroles\n/users/{id}/roles\n/api/v1/users/{id}/roles\n/directoryRoles/members\n/directoryRoles/{id}/members\n\n\ngroups\n/users/{id}/groups\n/api/v1/users/{id}/groups\n/users/{id}/memberOf\n/users/{id}/memberOf\n\n\nassignedApplications\n/users/{id}/appLinks\n/api/v1/users/{id}/appLinks\nappRoleAssignments\n/users/{id}/appRoleAssignments\n\n\nmfaEnrollment.methods\nfactorType, provider\n/api/v1/users/{id}/factors\n@odata.type in methods\n/users/{id}/authentication/methods\n\n\nlastSuccessfulLogin\nlastLogin\n/api/v1/users\nsignIns.success == true\n/auditLogs/signIns\n\n\nlastFailedLogin\nFrom logs (user.authentication.failed)\n/api/v1/logs\nsignIns.success == false\n/auditLogs/signIns\n\n\nsignInLocations\nclient.geographicalContext in logs\n/api/v1/logs\nlocation in sign-ins\n/auditLogs/signIns\n\n\nsignInDevices\nuserAgent or device.name in logs\n/api/v1/logs\ndeviceDetail in sign-ins\n/auditLogs/signIns\n\n\nriskLevel\nriskLevel\n/api/v1/users/{userId}/risk\nriskLevel in Identity Protection\n/identityProtection/riskyUsers\n\n\npoliciesApplied\nname\n/api/v1/policies\ndisplayName\n/identity/conditionalAccess/policies\n\n\npolicyGroup\nconditions.people.group.include\n/api/v1/policies\nguestUserRoleId\n/policies/authorizationPolicy"
+  },
+  {
+    "objectID": "index.html#primary-use-cases",
+    "href": "index.html#primary-use-cases",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "Identity and Access Management security products that give security teams insights into gaps in their identity security posture (such as too many accounts in an environment with admin privileges, unused accounts, etc.)\nGRC products that give compliance teams insights on how the data from their identity security products maps to controls within various compliance frameworks (SOC2, ISO27001, etc.)"
+  },
+  {
+    "objectID": "index.html#immediate-answer-from-querying",
+    "href": "index.html#immediate-answer-from-querying",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "How many admin users do I have in my environment?\nAre there unused accounts/grants in my environment?\nWhich policies are active in my environment?\nWhich users do these policies apply to?"
+  },
+  {
+    "objectID": "index.html#thinking-process",
+    "href": "index.html#thinking-process",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "Identify privilege risk\nExpose unused Identities\nMap users to security policies\nSupport control evidence for compliance (GRC)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLogical Field\nOkta Field / Source\nOkta API Endpoint\nEntra ID Field / Source\nMicrosoft Graph Endpoint\n\n\n\n\naccountCreatedDate\ncreated\n/api/v1/users\ncreatedDateTime\n/users\n\n\naccountEnabled\nstatus == \"ACTIVE\"\n/api/v1/users\naccountEnabled\n/users\n\n\nroles\n/users/{id}/roles\n/api/v1/users/{id}/roles\n/directoryRoles/members\n/directoryRoles/{id}/members\n\n\ngroups\n/users/{id}/groups\n/api/v1/users/{id}/groups\n/users/{id}/memberOf\n/users/{id}/memberOf\n\n\nassignedApplications\n/users/{id}/appLinks\n/api/v1/users/{id}/appLinks\nappRoleAssignments\n/users/{id}/appRoleAssignments\n\n\nmfaEnrollment.methods\nfactorType, provider\n/api/v1/users/{id}/factors\n@odata.type in methods\n/users/{id}/authentication/methods\n\n\nlastSuccessfulLogin\nlastLogin\n/api/v1/users\nsignIns.success == true\n/auditLogs/signIns\n\n\nlastFailedLogin\nFrom logs (user.authentication.failed)\n/api/v1/logs\nsignIns.success == false\n/auditLogs/signIns\n\n\nsignInLocations\nclient.geographicalContext in logs\n/api/v1/logs\nlocation in sign-ins\n/auditLogs/signIns\n\n\nsignInDevices\nuserAgent or device.name in logs\n/api/v1/logs\ndeviceDetail in sign-ins\n/auditLogs/signIns\n\n\nriskLevel\nriskLevel\n/api/v1/users/{userId}/risk\nriskLevel in Identity Protection\n/identityProtection/riskyUsers\n\n\npoliciesApplied\nname\n/api/v1/policies\ndisplayName\n/identity/conditionalAccess/policies\n\n\npolicyGroup\nconditions.people.group.include\n/api/v1/policies\nguestUserRoleId\n/policies/authorizationPolicy"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  },
+  {
+    "objectID": "index.html#define-the-goals",
+    "href": "index.html#define-the-goals",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "Identify privilege risk\nExpose unused Identities\nMap users to security policies\nSupport control evidence for compliance (GRC)"
+  },
+  {
+    "objectID": "index.html#mapping-table",
+    "href": "index.html#mapping-table",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "",
+    "text": "Logical Field\nOkta Field / Source\nOkta API Endpoint\nEntra ID Field / Source\nMicrosoft Graph Endpoint\n\n\n\n\naccountCreatedDate\ncreated\n/api/v1/users\ncreatedDateTime\n/users\n\n\naccountEnabled\nstatus == \"ACTIVE\"\n/api/v1/users\naccountEnabled\n/users\n\n\nroles\n/users/{id}/roles\n/api/v1/users/{id}/roles\n/directoryRoles/members\n/directoryRoles/{id}/members\n\n\ngroups\n/users/{id}/groups\n/api/v1/users/{id}/groups\n/users/{id}/memberOf\n/users/{id}/memberOf\n\n\nassignedApplications\n/users/{id}/appLinks\n/api/v1/users/{id}/appLinks\nappRoleAssignments\n/users/{id}/appRoleAssignments\n\n\nmfaEnrollment.methods\nfactorType, provider\n/api/v1/users/{id}/factors\n@odata.type in methods\n/users/{id}/authentication/methods\n\n\nlastSuccessfulLogin\nlastLogin\n/api/v1/users\nsignIns.success == true\n/auditLogs/signIns\n\n\nlastFailedLogin\nFrom logs (user.authentication.failed)\n/api/v1/logs\nsignIns.success == false\n/auditLogs/signIns\n\n\nsignInLocations\nclient.geographicalContext in logs\n/api/v1/logs\nlocation in sign-ins\n/auditLogs/signIns\n\n\nsignInDevices\nuserAgent or device.name in logs\n/api/v1/logs\ndeviceDetail in sign-ins\n/auditLogs/signIns\n\n\nriskLevel\nriskLevel\n/api/v1/users/{userId}/risk\nriskLevel in Identity Protection\n/identityProtection/riskyUsers\n\n\npoliciesApplied\nname\n/api/v1/policies\ndisplayName\n/identity/conditionalAccess/policies\n\n\npolicyGroup\nconditions.people.group.include\n/api/v1/policies\nguestUserRoleId\n/policies/authorizationPolicy"
+  },
+  {
+    "objectID": "index.html#primary-use-cases-1",
+    "href": "index.html#primary-use-cases-1",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "Primary use cases",
+    "text": "Primary use cases\n\nSecurity posture visibility: Understand if foundation identity policies, e.g. MFA, password strength are in place\nGovernance and compliance mapping: Demonstrate policy enforcement against frameworks like ISO27001, SOC 2\nInvestigation support: Determine what policies applied to a user at the time of an incident"
+  },
+  {
+    "objectID": "index.html#mapping-table-1",
+    "href": "index.html#mapping-table-1",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "Mapping table",
+    "text": "Mapping table\n\n\n\n\n\n\n\n\n\n\n\nLogical Field\nOkta Field / Source\nOkta API Endpoint\nEntra ID Field / Source\nMicrosoft Graph Endpoint\n\n\n\n\npolicyId\nid\n/api/v1/policies\nid\n/identity/conditionalAccess/policies\n\n\npolicyType\ntype (e.g., PASSWORD, MFA_ENROLL)\n/api/v1/policies\nDerived from conditions and grantControls\n/identity/conditionalAccess/policies\n\n\nname\nname\n/api/v1/policies\ndisplayName\n/identity/conditionalAccess/policies\n\n\nenforced\nstatus == ACTIVE\n/api/v1/policies\nstate == enabled\n/identity/conditionalAccess/policies\n\n\ntargetGroups\nconditions.people.groups\n/api/v1/policies\nconditions.users.includeGroups\n/identity/conditionalAccess/policies\n\n\nconditions\nconditions.&lt;subfields&gt;\n/api/v1/policies\nconditions\n/identity/conditionalAccess/policies\n\n\nmfaRequired\ntype == MFA_ENROLL or rule.actions.mfa\n/api/v1/policies\ngrantControls.builtInControls contains \"mfa\"\n/identity/conditionalAccess/policies\n\n\nlocationRestrictions\nVia networkZones and policy conditions\n/api/v1/policies, /api/v1/zones\nconditions.locations\n/identity/conditionalAccess/policies\n\n\ndeviceComplianceRequired\nrule.conditions.client.condition.deviceTrust\n/api/v1/policies\ngrantControls.requireCompliantDevice\n/identity/conditionalAccess/policies\n\n\nbypassConditions\nconditions.people.users.exclude, etc.\n/api/v1/policies\nconditions.users.excludeUsers, excludeGroups\n/identity/conditionalAccess/policies"
+  },
+  {
+    "objectID": "index.html#procedure",
+    "href": "index.html#procedure",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "Procedure",
+    "text": "Procedure\nTo address both questions effectively, the critical first step is to clearly define the objectives—specifically, what functionality the object is intended to support. Once the goals are established, I begin by brainstorming a list of potential data fields that would align with and serve those objectives.\nWith the candidate fields identified by skimming through the API documentation from both Okta and Microsoft Entra ID, I then focus on mapping these requirements to each platform. This process involves analyzing how each system structures relevant data related to identity, access, and policies, and identifying any semantic or structural discrepancies that may affect normalization efforts.\nThe final and most crucial phase is to evaluate whether these fields can be normalized—i.e., abstracted or aligned into a consistent schema that can work across both systems. This step is essential for building a unified integration layer or abstraction model that supports interoperability between identity providers, especially in scenarios where organizations rely on multi-cloud or hybrid identity environments."
+  },
+  {
+    "objectID": "index.html#difficulties",
+    "href": "index.html#difficulties",
+    "title": "Indentity Provider (IDP) Model",
+    "section": "Difficulties",
+    "text": "Difficulties\nOne of the main challenges in designing the user and policy objects was reconciling the differences in schema, terminology, and feature coverage between Okta and Microsoft Entra ID. Each platform structures identity and policy data differently—for example, Okta separates policy types while Entra ID uses nested conditional access logic—making direct field mappings nontrivial. Additionally, inconsistencies in API exposure (like missing password policy settings in Entra or limited risk signal visibility in Okta) required assumptions or inferred logic to maintain parity. These differences complicated both the data model design and the alignment of fields to real-world security use cases."
+  }
+]
